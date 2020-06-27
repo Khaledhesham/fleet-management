@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\APIResponse;
 use Illuminate\Http\Request;
 
 class UserService extends Service
@@ -17,7 +18,7 @@ class UserService extends Service
 		$input = $request->all();
 		$input['password'] = bcrypt($input['password']);
 		$user = User::create($input);
-		return $this->response($user, "User Registered Successfully", SUCCESS_STATUS_CODE);
+		return $this->response($user, "User Registered Successfully", APIResponse::SUCCESS_STATUS_CODE);
 	}
 
 	/**
@@ -29,6 +30,6 @@ class UserService extends Service
 	public function details()
 	{
 		$user = Auth::user();
-		return $this->response($user, "Retrieved Details Successfully", SUCCESS_STATUS_CODE);
+		return $this->response($user, "Retrieved Details Successfully", APIResponse::SUCCESS_STATUS_CODE);
 	}
 }

@@ -1,13 +1,12 @@
 <?php
 
 namespace App\Services;
+
+use App\Helpers\APIResponse;
 use GuzzleHttp\Client;
 
 class Service
 {
-	const SUCCESS_STATUS_CODE = 200;
-	const UNAUTHORIZED_STATUS_CODE = 401;
-
 	public function __construct(Client $client) {
 		$this->http = $client;
 	}
@@ -18,10 +17,13 @@ class Service
 	 * @param $data
 	 * @param string $message
 	 * @param int $statusCode
-	 * @return array
+	 * @return App\Helpers\APIResponse
 	 */
 	protected function response($data, string $message, int $statusCode) {
-		$response = ["data" => $data, "message" => $message, "statusCode" => $statusCode];
+		$response = new APIResponse();
+		$response->data = $data;
+		$response->message = $message;
+		$response->statusCode = $statusCode;
 		return $response;
 	}
 

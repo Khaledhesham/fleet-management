@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\APIResponse;
 use Illuminate\Http\Request;
 use Laravel\Passport\Client as OClient;
 
@@ -26,7 +27,7 @@ class AuthService extends Service
 		} else {
 			$data = NULL;
 			$message = "Authorization failed";
-			$statusCode =  self::UNAUTHORIZED_STATUS_CODE;
+			$statusCode = APIResponse::UNAUTHORIZED_STATUS_CODE;
 		}
 
 		return $this->response($data, $message, $statusCode);
@@ -40,7 +41,7 @@ class AuthService extends Service
 	 */
 	public function refreshToken(Request $request) {
 		if (is_null($request->header('Refreshtoken'))) {
-			return $this->response(NULL, "Authorization failed", self::UNAUTHORIZED_STATUS_CODE);
+			return $this->response(NULL, "Authorization failed", APIResponse::UNAUTHORIZED_STATUS_CODE);
 		}
 
 		$refresh_token = $request->header('Refreshtoken');
@@ -62,7 +63,7 @@ class AuthService extends Service
 	 */
 	public function logout(Request $request) {
 		$request->user()->token()->revoke();
-		return $this->response(NULL, 'Successfully logged out', self::SUCCESS_STATUS_CODE);
+		return $this->response(NULL, 'Successfully logged out', APIResponse::SUCCESS_STATUS_CODE);
 	}
 
 	/**
