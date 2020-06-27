@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('users')->group(function () {
-    Route::post('login', 'UserController@login');
-    Route::post('register', 'UserController@register');
-    Route::post('refreshtoken', 'AuthController@refreshToken');
+    Route::post('login', 'API\AuthController@login');
+    Route::post('register', 'API\UserController@store');
+    Route::post('refreshToken', 'API\AuthController@refreshToken');
 
     Route::group(['middleware' => ['auth:api']], function () {
-        Route::post('logout', 'AuthController@logout');
-        Route::post('details', 'UserController@details');
+        Route::post('logout', 'API\AuthController@logout');
+        Route::post('details', 'API\UserController@show');
     });
 });
