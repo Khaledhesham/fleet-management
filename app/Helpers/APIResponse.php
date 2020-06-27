@@ -18,7 +18,7 @@ class APIResponse
 	 */
 	public function format()
 	{
-		if ($this->statusCode == SUCCESS_STATUS_CODE)
+		if ($this->statusCode == self::SUCCESS_STATUS_CODE)
 		{
 			return response()->json(["data" => $this->data, "message" => $this->message], $this->statusCode);
 		}
