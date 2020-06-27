@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 
@@ -17,7 +19,7 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         $response = $this->authService->login($request);
         return $response->format();
