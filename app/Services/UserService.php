@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\APIResponse;
+use App\User;
 use Illuminate\Http\Request;
 
 class UserService extends Service

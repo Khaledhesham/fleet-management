@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\APIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Client as OClient;
 
 class AuthService extends Service
