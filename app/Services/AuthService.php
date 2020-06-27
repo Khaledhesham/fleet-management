@@ -53,7 +53,18 @@ class AuthService extends Service
 						'client_secret' => $Oclient->secret,
 						'scope' => '*'];
 
-		return $this->sendRequest("/oauth/token", $formParams, 'POST');
+		$data = $this->sendRequest("/oauth/token", $formParams, 'POST');
+
+		if ($data["statusCode"] == APIResponse::SUCCESS_STATUS_CODE)
+		{
+			$message = 'Successfully refreshed token';
+		}
+		else
+		{
+			$message = 'Failed to refresh token';
+		}
+
+		return $this->response($data["data"], $message, $data["statusCode"]);
 	}
 
 	/**
