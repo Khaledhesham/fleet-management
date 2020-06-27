@@ -7,8 +7,8 @@ use GuzzleHttp\Client;
 
 class Service
 {
-	public function __construct(Client $client) {
-		$this->http = $client;
+	public function __construct() {
+		$this->http = new Client(['http_errors' => false]);;
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Service
 
 			$response = $this->http->request($method, $url, ['form_params' => $formParams]);
 
-			$statusCode = self::SUCCESS_STATUS_CODE;
+			$statusCode = $response->getStatusCode();
 
 			$data = json_decode((string) $response->getBody(), true);
 		}
