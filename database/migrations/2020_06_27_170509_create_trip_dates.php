@@ -16,7 +16,6 @@ class CreateTripDates extends Migration
         Schema::create('trip_dates', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('trip_id');
-            $table->text('day');
             $table->tinyInteger('weekday');
             $table->time('time');
             $table->boolean('is_recurring');
