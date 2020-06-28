@@ -24,3 +24,7 @@ Route::prefix('users')->group(function () {
         Route::post('details', 'API\UserController@show');
     });
 });
+
+Route::middleware('auth:api')->post('seats', 'API\SeatController@index');
+
+Route::middleware('auth:api')->resource('reservation', 'API\ReservationController')->only('store');
