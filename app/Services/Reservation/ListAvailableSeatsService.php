@@ -3,8 +3,9 @@
 namespace App\Services\Reservation;
 
 use App\Helpers\APIResponse;
-use App\Reservation;
+use App\Seat;
 use App\Services\Service;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ListAvailableSeatsService extends Service
@@ -17,13 +18,13 @@ class ListAvailableSeatsService extends Service
      */
 	public function list(Request $request)
 	{
-		$date = $request->input('date');
+		$date = Carbon::parse($request->input('date'));
 		$originCityId = $request->input('origin_city_id');
 		$destinationCityId = $request->input('destination_city_id');
 
-		$data = Reservation::getAvailableSeats($date, $originCityId, $destinationCityId);
+		$data = Seat::getAvailableSeats($date, $originCityId, $destinationCityId);
 
-		if (!empty($data))
+		if (!$data->isEmpty())
 		{
 			$message = "Found seats with the required parameters";
 			$statusCode = APIResponse::SUCCESS_STATUS_CODE;
