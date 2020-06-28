@@ -15,6 +15,8 @@ class UpdateReservationsTable extends Migration
     {
         Schema::table('reservations', function (Blueprint $table) {
             $table->bigInteger('seat_id');
+            $table->bigInteger('origin_city_id');
+            $table->bigInteger('destination_city_id');
         });
     }
 
@@ -27,6 +29,8 @@ class UpdateReservationsTable extends Migration
     {
         Schema::table('reservations', function (Blueprint $table) {
             $table->dropColumn('seat_id');
+            $table->dropColumn('origin_city_id');
+            $table->dropColumn('destination_city_id');
         });
     }
 }
