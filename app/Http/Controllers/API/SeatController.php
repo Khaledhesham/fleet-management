@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 
 class SeatController extends Controller
 {
-    public function __construct(ListAvailableSeatsService $ListAvailableSeatsService) {
-        $this->ListAvailableSeatsService = $ListAvailableSeatsService;
+    public function __construct(ListAvailableSeatsService $listAvailableSeatsService) {
+        $this->listAvailableSeatsService = $listAvailableSeatsService;
     }
 
     /**
@@ -22,7 +22,7 @@ class SeatController extends Controller
      */
     public function index(ListAvailableSeatsRequest $request)
     {
-        $response = $this->userService->register($request);
+        $response = $this->listAvailableSeatsService->list($request);
         return $response->format();
     }
 
