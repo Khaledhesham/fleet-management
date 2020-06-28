@@ -26,9 +26,11 @@ class ReserveSeatService extends Service
 		$tripDateId = $request->input('trip_date_id');
 
 		$data = Seat::getAvailableSeats($date, $originCityId, $destinationCityId);
-		$required_reservation_data = $data->firstWhere(['seat_id' => $seatId, 'dst_id' => $tripDateId]);
+		$is_available = $data->contains(function ($item) use($seatId, $tripDateId) {
+			return $item->id == $seatId && $item->trip_date_id == $tripDateId;
+		});
 
-		if ($required_reservation_data !== null)
+		if ($is_available)
 		{
 			$data = new Reservation();
 			$data->seat_id = $seatId;
@@ -37,12 +39,13 @@ class ReserveSeatService extends Service
 			$data->trip_date_id = $tripDateId;
 			$data->user_id = $request->user()->id;
 			$data->date = $date;
+			$data->save();
 			$message = "Reserved successfully";
 			$statusCode = APIResponse::SUCCESS_STATUS_CODE;
 		}
 		else
 		{
-			$data = NULL;
+			$data = [];
 			$message = "The required seat doesn't exist";
 			$statusCode = APIResponse::NOT_FOUND_STATUS_CODE;
 		}
