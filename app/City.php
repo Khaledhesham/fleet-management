@@ -9,6 +9,7 @@ class City extends Model
     protected $fillable = [
         'name',
     ];
+    public $timestamps = false;
 
     /**
      * Retrieves trips for this city
