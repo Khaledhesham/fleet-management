@@ -6,6 +6,7 @@ class APIResponse
 {
 	const SUCCESS_STATUS_CODE = 200;
 	const UNAUTHORIZED_STATUS_CODE = 401;
+	const NOT_FOUND_STATUS_CODE = 404;
 
 	public $data;
 	public $message;
