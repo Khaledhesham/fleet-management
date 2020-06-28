@@ -39,11 +39,8 @@ class Seat extends Model
                  ->join('trip_dates', 'trips.id', '=', 'trip_dates.trip_id')
                  ->leftJoin('reservations', 'seats.id', '=', 'reservations.seat_id')
                  ->leftJoin('trips_cities as origin_trip_city', 'reservations.origin_city_id', '=' , 'origin_trip_city.city_id')
-                 ->leftJoin('trips_cities as destination_trip_cit', 'reservations.origin_city_id', '=' , 'destination_trip_cit.city_id')
+                 ->leftJoin('trips_cities as destination_trip_city', 'reservations.origin_city_id', '=' , 'destination_trip_city.city_id')
                  ->where(DB::Raw($originCityId), '<>', DB::Raw($destinationCityId))
-                 ->where(DB::Raw("(SELECT stop from trips_cities where trip_id=trips.id and city_id=$destinationCityId)"),
-                         '>',
-                         DB::Raw("(SELECT stop from trips_cities where trip_id=trips.id and city_id=$originCityId)"))
                  ->where('trip_dates.weekday', $date->dayOfWeek)
                  ->whereIn('trips.id', function ($query) use($originCityId) {
                     $query->select('trip_id')
@@ -57,13 +54,27 @@ class Seat extends Model
                  })
                  ->where(function($query) use ($date, $originCityId, $destinationCityId){
                     $query->WhereNull('reservations.id')
-                          ->orwhere('reservations.date', '<>', $date)
-                          ->orWhere('origin_trip_city.stop', '>=',
-                                DB::Raw("(SELECT stop from trips_cities where trip_id=trips.id and city_id=$destinationCityId)"))
-                          ->orWhere('destination_trip_cit.stop', '<=',
-                                DB::Raw("(SELECT stop from trips_cities where trip_id=trips.id and city_id=$originCityId)"));
+                          ->orwhere('reservations.date', '<>', $date);
                  })
-                 ->get(['seats.id', 'seats.row', 'seats.column', 'trip_dates.trip_id', DB::raw('trip_dates.id AS trip_date_id'), 'trip_dates.time']);
+                 ->get(['seats.id',
+                        'seats.row',
+                        'seats.column',
+                        'trip_dates.trip_id',
+                        'destination_trip_city.stop as reservation_destination_stop',
+                        'destination_trip_city.stop as reservation_origin_stop',
+                        DB::raw("(SELECT stop from trips_cities where trip_id = trip_dates.trip_id and city_id=$destinationCityId) as destination_stop"),
+                        DB::raw("(SELECT stop from trips_cities where trip_id = trip_dates.trip_id and city_id=$originCityId) as origin_stop"),
+                        DB::raw('trip_dates.id AS trip_date_id'),
+                        'trip_dates.time']);
+
+        $seats = $seats->filter(function ($item) {
+            return $item->destination_stop > $item->origin_stop
+                &&  ($item->reservation_destination_stop === NULL
+                    || $item->origin_destination_stop === NULL
+                    || $item->reservation_destination_stop < $item->origin_stop 
+                    || $item->reservation_origin_stop < $item->destination_stop);
+        });
+
         return $seats;
     }
 }
